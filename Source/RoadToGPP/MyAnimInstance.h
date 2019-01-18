@@ -19,9 +19,11 @@ class ROADTOGPP_API UMyAnimInstance : public UAnimInstance
 
 public :
 
-	UMyAnimInstance() : isWalking(false), movementSpeed(0), m_movComp(nullptr) { };
+	UMyAnimInstance() : isWalking(false), m_owner(nullptr), m_isIni(false) { };
 
 protected:
+
+	friend class UBTTask_LookingAround;
 
 	float time{ 0 };
 
@@ -31,17 +33,27 @@ protected:
 
 	/*Holds the current speed of our character*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		float movementSpeed;
+		bool isLookingAround;
 
 	/*Updates the above properties*/
 	UFUNCTION(BlueprintCallable, Category = "UpdateAnimationProperties")
 		void UpdateAnimationProperties();
 
-	UCharacterMovementComponent * m_movComp;
+	AActor * m_owner;
+	bool m_isIni;
 
 	virtual void NativeUpdateAnimation()
 	{
 		UpdateAnimationProperties();
+	}
+
+	inline void Initailize()
+	{
+		if (!m_isIni)
+		{
+			m_owner = GetOwningActor();
+			m_isIni = true;
+		}
 	}
 
 };

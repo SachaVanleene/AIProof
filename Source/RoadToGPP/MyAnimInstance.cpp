@@ -4,7 +4,8 @@
 
 void UMyAnimInstance::UpdateAnimationProperties()
 {
-	if (movementSpeed >= 0)
+	Initailize();
+	if (m_owner->GetVelocity().Size() >= 0.0f)
 	{
 		isWalking = true;
 	}
