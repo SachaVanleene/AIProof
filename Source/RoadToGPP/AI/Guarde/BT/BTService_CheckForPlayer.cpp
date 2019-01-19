@@ -5,8 +5,8 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
-#include "GuardeCharacter.h"
-#include "GuardAI.h"
+#include "AI/Guarde/GuardeCharacter.h"
+#include "AI/Guarde/GuardAI.h"
 
 
 

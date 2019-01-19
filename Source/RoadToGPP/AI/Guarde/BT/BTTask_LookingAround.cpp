@@ -2,7 +2,7 @@
 
 #include "BTTask_LookingAround.h"
 #include "Animation/AnimInstance.h"
-#include "MyAnimInstance.h"
+#include "Anim/MyAnimInstance.h"
 #include "AIController.h"
 
 EBTNodeResult::Type UBTTask_LookingAround::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_LookingAround::ExecuteTask(UBehaviorTreeComponent& O
 
 inline EBTNodeResult::Type UBTTask_LookingAround::TriggerAnimation(UBehaviorTreeComponent& OwnerComp)
 {
-	m_meshComp = OwnerComp.GetAIOwner()->FindComponentByClass<USkeletalMeshComponent>();
+	m_meshComp = OwnerComp.GetAIOwner()->GetPawn()->FindComponentByClass<USkeletalMeshComponent>();
 	m_animInstance = Cast<UMyAnimInstance>(m_meshComp->GetAnimInstance());
 	if (m_animInstance)
 	{

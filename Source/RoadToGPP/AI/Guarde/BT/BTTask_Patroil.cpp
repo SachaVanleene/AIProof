@@ -5,11 +5,11 @@
 
 //Helper FUnctionb
 
-const float SEUIL = 1e-5;
+const float SEUIL = 1;
 
 bool UBTTask_Patroil::HasReachedTargetPos(UBehaviorTreeComponent& OwnerComp)
 {
-	if (FVector::Dist(OwnerComp.GetAIOwner()->GetTargetLocation(), *m_currentPatroilTarget) <= SEUIL)
+	if (FVector::Dist(OwnerComp.GetAIOwner()->GetTargetLocation(), OwnerComp.GetAIOwner()->GetPawn()->GetActorLocation()) <= SEUIL)
 	{
 		return true;
 	}
@@ -62,7 +62,7 @@ EBTNodeResult::Type UBTTask_Patroil::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	{
 		if (ChoseNextPos())
 		{
-			OwnerComp.GetAIOwner()->MoveToLocation(*m_currentPatroilTarget);
+			OwnerComp.GetAIOwner()->MoveToLocation(*m_currentPatroilTarget, 5.f, true, true, true, true);
 			isMovingToLocation = true;
 			return EBTNodeResult::InProgress;
 		}

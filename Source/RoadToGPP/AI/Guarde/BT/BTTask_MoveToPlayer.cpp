@@ -4,9 +4,9 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "GuardAI.h"
+#include "AI/Guarde/GuardAI.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
-#include "GuardeCharacter.h"
+#include "AI/Guarde/GuardeCharacter.h"
 
 EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
