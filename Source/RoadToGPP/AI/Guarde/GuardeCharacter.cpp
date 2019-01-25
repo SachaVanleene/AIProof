@@ -22,6 +22,8 @@ void AGuardeCharacter::BeginPlay()
 void AGuardeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	/*FVector test = GetActorLocation();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));*/
 
 }
 

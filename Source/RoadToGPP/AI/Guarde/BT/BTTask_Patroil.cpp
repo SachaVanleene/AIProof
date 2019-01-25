@@ -2,17 +2,19 @@
 
 #include "BTTask_Patroil.h"
 #include "AIController.h"
-#include "GameFramework/Character.h"
 
 
-const float SEUIL = 1;
+const float SEUIL = 100;
 
 
 bool UBTTask_Patroil::HasReachedTargetPos(UBehaviorTreeComponent& OwnerComp)
 {
-	auto test = OwnerComp.GetAIOwner()->GetControlledPawn();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));
-	if (FVector::Dist(OwnerComp.GetAIOwner()->GetTargetLocation(), OwnerComp.GetAIOwner()->GetCharacter()->GetActorLocation()) <= SEUIL)
+	/*FVector test = *m_currentPatroilTarget;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));*/
+	AAIController *  aiC = OwnerComp.GetAIOwner();
+	auto h = FVector::Dist(*m_currentPatroilTarget, aiC->GetPawn()->GetActorLocation());
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("DIST %.2f"), h)); 
+	if (FVector::Dist(*m_currentPatroilTarget, aiC->GetPawn()->GetActorLocation()) <= SEUIL)
 	{
 		return true;
 	}
@@ -82,9 +84,8 @@ void UBTTask_Patroil::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeM
 		if (HasReachedTargetPos(OwnerComp))
 		{
 			isMovingToLocation = false;
-			//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		}
-		EBTNodeResult::InProgress;
 	}
 }
 

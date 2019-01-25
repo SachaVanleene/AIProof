@@ -20,10 +20,16 @@ class ROADTOGPP_API AGuardAI : public AAIController
 	UPROPERTY(transient)
 		class UBehaviorTreeComponent * m_BehaviorComponent;
 	
+
+private:
+	uint8 m_EnnemyKeyID;
+	APawn * m_Pawn;
 public :
 
 	AGuardAI();
 
 	virtual void Possess(APawn* InPawn) override;
-	uint8 m_EnnemyKeyID;
+
+	inline uint8 GetEnnemeyKeyID() { return m_EnnemyKeyID; };
+	inline APawn * GetAssociatedPawn() { return m_Pawn; };
 };

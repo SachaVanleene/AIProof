@@ -11,9 +11,10 @@
 EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AGuardAI * guardPC = Cast<AGuardAI>(OwnerComp.GetAIOwner());
+	/*FVector test = OwnerComp.GetOwner()->GetTransform().GetLocation();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));*/
 
-
-	APawn * Ennemy = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(guardPC->m_EnnemyKeyID));
+	APawn * Ennemy = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(guardPC->GetEnnemeyKeyID()));
 
 	if (Ennemy)
 	{

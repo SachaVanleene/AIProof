@@ -5,9 +5,9 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
-#include "GuardeCharacter.h"
+#include "GuardeCharacterFix.h"
 
-AGuardAI::AGuardAI()
+AGuardAI::AGuardAI() : m_Pawn(nullptr)
 {
 	m_BlackBoard = CreateDefaultSubobject<UBlackboardComponent>(TEXT("m_BlackBoard"));
 	m_BehaviorComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("m_BehaviorComponent"));
@@ -16,16 +16,17 @@ AGuardAI::AGuardAI()
 void AGuardAI::Possess(APawn* InPawn)
 {
 	Super::Possess(InPawn);
+	m_Pawn = InPawn;
 
-	AGuardeCharacter * gCHar = Cast<AGuardeCharacter>(InPawn);
+	AGuardeCharacterFix * gCHar = Cast<AGuardeCharacterFix>(InPawn);
 
-	if (gCHar && gCHar->GuardBehavior)
+	if (gCHar && gCHar->m_Behavior)
 	{
-		m_BlackBoard->InitializeBlackboard(*gCHar->GuardBehavior->BlackboardAsset);
+		m_BlackBoard->InitializeBlackboard(*gCHar->m_Behavior->BlackboardAsset);
 
 		m_EnnemyKeyID = m_BlackBoard->GetKeyID("m_Target");
 
-		m_BehaviorComponent->StartTree(*gCHar->GuardBehavior);
+		m_BehaviorComponent->StartTree(*gCHar->m_Behavior);
 	}
 }
 

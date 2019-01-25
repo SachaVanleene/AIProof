@@ -108,7 +108,8 @@ void USteeringComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		
 ;		FVector force = CalculatePrioritized();
 		m_movComponent->AddForce(force);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), force.X, force.Y, force.Z));
+		/*FVector test = m_owner->GetActorLocation();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));*/
 		//UE_LOG(LogTemp, Warning, TEXT("Apply force 2 "));
 	}
 	// ...
