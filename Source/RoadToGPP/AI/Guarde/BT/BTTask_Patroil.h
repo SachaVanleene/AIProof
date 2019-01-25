@@ -9,7 +9,9 @@
 UCLASS()
 class ROADTOGPP_API UBTTask_Patroil : public UBTTask_BlackboardBase
 {
-	UBTTask_Patroil() : m_currentPatroilTarget(nullptr), isMovingToLocation(false) {};
+	UBTTask_Patroil(const FObjectInitializer & ObjectInitializer) : m_currentPatroilTarget(nullptr), isMovingToLocation(false), Super(ObjectInitializer) {
+		Super::bNotifyTick = 1;
+	};
 
 	GENERATED_BODY()
 
@@ -22,6 +24,7 @@ class ROADTOGPP_API UBTTask_Patroil : public UBTTask_BlackboardBase
 	bool isMovingToLocation;
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual void TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds) override;
 
 	bool ChoseNextPos();
 
