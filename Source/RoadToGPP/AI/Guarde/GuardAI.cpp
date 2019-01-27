@@ -7,7 +7,8 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
 #include "GuardeCharacterFix.h"
 
-AGuardAI::AGuardAI() : m_Pawn(nullptr)
+AGuardAI::AGuardAI() : 
+	m_Pawn(nullptr)
 {
 	m_BlackBoard = CreateDefaultSubobject<UBlackboardComponent>(TEXT("m_BlackBoard"));
 	m_BehaviorComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("m_BehaviorComponent"));

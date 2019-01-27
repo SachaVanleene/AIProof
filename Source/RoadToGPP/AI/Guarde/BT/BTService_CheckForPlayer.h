@@ -13,7 +13,9 @@ UCLASS()
 class ROADTOGPP_API UBTService_CheckForPlayer : public UBTService
 {
 	GENERATED_BODY()
-	
+
+
+		float m_seuilAnimFInished;
 public : 
 
 	UBTService_CheckForPlayer();

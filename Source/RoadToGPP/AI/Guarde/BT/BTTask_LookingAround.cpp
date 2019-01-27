@@ -2,8 +2,11 @@
 
 #include "BTTask_LookingAround.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimStateMachineTypes.h"
 #include "Anim/MyAnimInstance.h"
 #include "AIController.h"
+
+//SHOULD USE EVENT SYSTEM TO REWORK
 
 EBTNodeResult::Type UBTTask_LookingAround::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -18,10 +21,10 @@ EBTNodeResult::Type UBTTask_LookingAround::ExecuteTask(UBehaviorTreeComponent& O
 
 inline EBTNodeResult::Type UBTTask_LookingAround::TriggerAnimation(UBehaviorTreeComponent& OwnerComp)
 {
-	FVector test = OwnerComp.GetOwner()->GetTransform().GetLocation();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));
-	m_meshComp = OwnerComp.GetAIOwner()->GetPawn()->FindComponentByClass<USkeletalMeshComponent>();
-	m_animInstance = Cast<UMyAnimInstance>(m_meshComp->GetAnimInstance());
+	m_animInstance = Cast<UMyAnimInstance>(OwnerComp.GetAIOwner()->GetPawn()->FindComponentByClass<USkeletalMeshComponent>()->GetAnimInstance());
+	const FBakedAnimationStateMachine * fsmInstance = m_animInstance->GetStateMachineInstanceDesc("NainFSM");
+	m_animIndex = fsmInstance->FindStateIndex("looking_around");
+	m_stateMachineIndex = m_animInstance->GetStateMachineIndex("NainFSM");
 	if (m_animInstance)
 	{
 		m_isAnimTriggered = true;
@@ -29,6 +32,21 @@ inline EBTNodeResult::Type UBTTask_LookingAround::TriggerAnimation(UBehaviorTree
 		return EBTNodeResult::InProgress;
 	}
 	return EBTNodeResult::Failed;
+}
+
+//TODO : HORRRIBLE ANIM SHOULD TRIGGER EVENT WE RECEIVE OR WHAT EVER CAUSE DEPEND ON TICK RATE .........
+void UBTTask_LookingAround::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+	float time_remaining = m_animInstance->GetRelevantAnimTimeRemainingFraction(m_stateMachineIndex, m_animIndex);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("TIME %.2f"), time_remaining));
+	if (time_remaining <= m_seuilAnimFinished)
+	{
+		m_isAnimTriggered = false;
+		m_animInstance->isLookingAround = false;
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
+	EBTNodeResult::InProgress;
 }
 
 

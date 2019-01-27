@@ -22,8 +22,8 @@ class ROADTOGPP_API AGuardAI : public AAIController
 	
 
 private:
-	uint8 m_EnnemyKeyID;
 	APawn * m_Pawn;
+	uint8 m_EnnemyKeyID;
 public :
 
 	AGuardAI();

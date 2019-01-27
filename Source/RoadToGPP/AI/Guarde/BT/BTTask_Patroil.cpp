@@ -9,11 +9,7 @@ const float SEUIL = 100;
 
 bool UBTTask_Patroil::HasReachedTargetPos(UBehaviorTreeComponent& OwnerComp)
 {
-	/*FVector test = *m_currentPatroilTarget;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("VECTOR %.2f, %.2f, %.2f"), test.X, test.Y, test.Z));*/
-	AAIController *  aiC = OwnerComp.GetAIOwner();
-	auto h = FVector::Dist(*m_currentPatroilTarget, aiC->GetPawn()->GetActorLocation());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("DIST %.2f"), h)); 
+	AAIController *  aiC = OwnerComp.GetAIOwner(); 
 	if (FVector::Dist(*m_currentPatroilTarget, aiC->GetPawn()->GetActorLocation()) <= SEUIL)
 	{
 		return true;
