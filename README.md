@@ -17,6 +17,8 @@ In progress :
   - Pour le moment dev sur un projet console, portage sous projet et choisir appliquation
 - Anim : 
   - Utiliser une FSM correct et un code driven (skip for now car pas le main focus)
+- Visual Detection YSstem : 
+  - Working
 - General : 
   - Clean le code et restructure avec Steering
   
