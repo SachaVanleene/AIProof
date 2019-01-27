@@ -25,7 +25,15 @@ UVisionDetectSystem::UVisionDetectSystem() :
 void UVisionDetectSystem::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (m_playerCheck && m_playerPawn == nullptr)
+	{
+		m_playerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+		if (m_playerPawn == nullptr)
+		{
+			//Error happened
+			m_playerCheck = false;
+		}
+	}
 	m_radiusAngle = FMath::DegreesToRadians(m_degreeAngle);
 	m_realMaxDist = m_maxForwardDist / cos(m_radiusAngle);
 }
@@ -36,16 +44,6 @@ void UVisionDetectSystem::BeginPlay()
 void UVisionDetectSystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (m_playerCheck && m_playerPawn == nullptr)
-	{
-		m_playerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-		if (m_playerPawn == nullptr)
-		{
-			//Error happened
-			m_playerCheck = false;
-		}
-	}
 
 	if (m_playerPawn != nullptr)
 	{
