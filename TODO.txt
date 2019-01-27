@@ -12,8 +12,10 @@ In progress :
   - FInir correctement le BT du guarde en cours (Systeme de combat a faire plus tard pas priorite)
  - Neural Network : 
   - Pour le moment dev sur un projet console, portage sous projet et choisir appliquation
+ - Visual Detection YSstem : 
+  - Working
  - Anim : 
-  - Utiliser une FSM correct et un code driven (skip for now car pas le main focus)
+  - En cours mais need d utiliser des events
  - General : 
   - Clean le code et restructure avec Steering
   
