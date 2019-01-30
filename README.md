@@ -19,6 +19,7 @@ In progress :
   - Utiliser une FSM correct et un code driven (skip for now car pas le main focus)
 - Visual Detection YSstem : 
   - Working
+  - Need to check distance and raycast to check if we do not collide with other things meaning we dont see through wall
 - General : 
   - Clean le code et restructure avec Steering
   
