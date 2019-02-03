@@ -31,7 +31,7 @@ m_bCellSpaceOn(false)
 
 	m_movComponent = m_owner->FindComponentByClass<UCharacterMovementComponent>();
 
-	m_Team = m_owner->FindComponentByClass<UTestTeamComponent>();
+	m_Team = m_TeamActor->FindComponentByClass<UTestTeamComponent>();
 
 
 	//stuff for the wander behavior
@@ -91,7 +91,15 @@ void USteeringComponent::BeginPlay()
 	{
 		m_movComponent = m_owner->FindComponentByClass<UCharacterMovementComponent>();
 
-		m_Team = m_owner->FindComponentByClass<UTestTeamComponent>();
+		if (m_TeamActor)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamOK");
+			m_Team = m_TeamActor->FindComponentByClass<UTestTeamComponent>();
+			if (m_Team)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamSetUp");
+			}
+		}
 	}
 	m_currentTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
 	// ...
@@ -338,19 +346,20 @@ FVector USteeringComponent::Arrive(const FVector    &target,
 //------------------------------------------------------------------------
 FVector USteeringComponent::Wander()
 {
+	FVector startPoint = m_vWanderTarget;
 	//first, add a small random vector to the target's position
-	m_vWanderTarget += FVector((double)rand() / (double)RAND_MAX * m_dWanderJitter,
-		(double)rand() / (double)RAND_MAX * m_dWanderJitter, (double)rand() / (double)RAND_MAX * m_dWanderJitter);
+	startPoint += FVector((double)rand() / (double)RAND_MAX * m_dWanderJitter,
+		(double)rand() / (double)RAND_MAX * m_dWanderJitter, 0.0f)/*(double)rand() / (double)RAND_MAX * m_dWanderJitter)*/;
 
 	//reproject this new vector back on to a unit circle
-	m_vWanderTarget.Normalize();
+	startPoint.GetSafeNormal();
 
 	//increase the length of the vector to the same as the radius
 	//of the wander circle
-	m_vWanderTarget *= m_dWanderRadius;
+	startPoint *= m_dWanderRadius;
 
 	//move the target into a position WanderDist in front of the agent
-	FVector target = m_vWanderTarget + FVector(m_dWanderDistance, 0.0f, 0.0f);
+	FVector target = startPoint + FVector(m_dWanderDistance, 0.0f, 0.0f);
 
 	FVector  worldTarget = m_owner->GetTransform().TransformPosition(target);
 	//project the target into world space
@@ -459,20 +468,19 @@ void USteeringComponent::CreateFeelers()
 //
 // this calculates a force repelling from the other neighbors
 //------------------------------------------------------------------------
-FVector USteeringComponent::Separation(const std::list<AActor*>& neighbors)
+FVector USteeringComponent::Separation(const TArray<AActor*>& neighbors)
 {
 	//iterate through all the neighbors and calculate the vector from the
 	FVector SteeringForce;
 
-	std::list<AActor*>::const_iterator it = neighbors.begin();
-	for (it; it != neighbors.end(); ++it)
+	for (AActor * actor: neighbors)
 	{
 		//make sure this agent isn't included in the calculations and that
 		//the agent being examined is close enough. ***also make sure it doesn't
 		//include the evade target ***
-		if (*it != m_owner) 
+		if (actor != m_owner) 
 		{
-			FVector ToAgent = m_owner-> GetActorLocation() - (*it)-> GetActorLocation();
+			FVector ToAgent = m_owner->GetActorLocation() - actor->GetActorLocation();
 
 			//scale the force inversely proportional to the agents distance  
 			//from its neighbor.
@@ -483,22 +491,21 @@ FVector USteeringComponent::Separation(const std::list<AActor*>& neighbors)
 	return SteeringForce;
 }
 
-FVector USteeringComponent::Cohesion(const std::list<AActor*> &agents)
+FVector USteeringComponent::Cohesion(const TArray<AActor*>& agents)
 {
 	//first find the center of mass of all the agents
 	FVector CenterOfMass, SteeringForce;
 
 	int NeighborCount = 0;
 
-	std::list<AActor*>::const_iterator it = agents.begin();
-	for (it; it != agents.end(); ++it)
+	for (AActor * actor : agents)
 	{
 		//make sure this agent isn't included in the calculations and that
 		//the agent being examined is close enough. ***also make sure it doesn't
 		//include the evade target ***
-		if (*it != m_owner)
+		if (actor != m_owner)
 		{
-			CenterOfMass += (*it)-> GetActorLocation();
+			CenterOfMass += actor-> GetActorLocation();
 
 			++NeighborCount;
 		}
@@ -515,10 +522,10 @@ FVector USteeringComponent::Cohesion(const std::list<AActor*> &agents)
 
 	//the magnitude of cohesion is usually much larger than separation or
 	//allignment so it usually helps to normalize it.
-	return SteeringForce.GetUnsafeNormal();
+	return SteeringForce.GetSafeNormal();
 }
 
-FVector USteeringComponent::Alignment(const std::list<AActor*> &agents)
+FVector USteeringComponent::Alignment(const TArray<AActor*>& agents)
 {
 	//used to record the average heading of the neighbors
 	FVector AverageHeading;
@@ -526,15 +533,14 @@ FVector USteeringComponent::Alignment(const std::list<AActor*> &agents)
 	//used to count the number of vehicles in the neighborhood
 	int    NeighborCount = 0;
 
-	std::list<AActor*>::const_iterator it = agents.begin();
-	for (it; it != agents.end(); ++it)
+	for (AActor * actor : agents)
 	{
 		//make sure this agent isn't included in the calculations and that
 		//the agent being examined is close enough. ***also make sure it doesn't
 		//include the evade target ***
-		if (*it != m_owner)
+		if (actor != m_owner)
 		{
-			AverageHeading += (*it)->GetActorForwardVector();
+			AverageHeading += actor->GetActorForwardVector();
 
 			++NeighborCount;
 		}

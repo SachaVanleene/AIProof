@@ -12,12 +12,15 @@ class ROADTOGPP_API UTestTeamComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+
 private:
-		std::list<AActor *> teamComposition;
 
 public:	
 	// Sets default values for this component's properties
 	UTestTeamComponent();
+
+	UPROPERTY(EditAnywhere, Category = "Group")
+	TArray<AActor *> teamComposition;
 
 protected:
 	// Called when the game starts
@@ -27,8 +30,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AddMate(AActor * newMate) { teamComposition.push_back(newMate); };
-	const std::list<AActor *> & GetTeam() { return teamComposition; };
+	void AddMate(AActor * newMate) { teamComposition.Add(newMate); };
+	const TArray<AActor *> & GetTeam() { return teamComposition; };
 		
 	
 };

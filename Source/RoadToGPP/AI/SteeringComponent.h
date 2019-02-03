@@ -19,7 +19,7 @@ const double WanderRad = 1.2;
 //distance the wander circle is projected in front of the agent
 const double WanderDist = 2.0;
 //the maximum amount of displacement along the circle each frame
-const double WanderJitterPerSec = 40.0;
+const double WanderJitterPerSec = 1.0;
 
 class UTestTeamComponent;
 
@@ -43,28 +43,28 @@ private :
 		wall_avoidance = 0x00200,
 	};
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool seek_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool arrive_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool wander_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool cohesion_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool separation_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool alignment_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool follow_activated;
 
-	UPROPERTY(EditAnywhere, Category = "Steering")
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool wall_avoidance_activated;
 
 	//a pointer to the owner of this instance
@@ -84,6 +84,8 @@ private :
 	UCharacterMovementComponent * m_movComponent;
 
 	//Team
+	UPROPERTY(EditAnywhere, Category = "Steering|ActorTeam")
+		AActor * m_TeamActor;
 	UTestTeamComponent * m_Team;
 
 	//a vertex buffer to contain the feelers rqd for wall avoidance  
@@ -98,20 +100,31 @@ private :
 	FVector     m_vWanderTarget;
 
 	//explained above
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWanderParameter")
 	double        m_dWanderJitter;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWanderParameter")
 	double        m_dWanderRadius;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWanderParameter")
 	double        m_dWanderDistance;
 
 
 	//multipliers. These can be adjusted to effect strength of the  
 	//appropriate behavior.
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightSeparation;
-	double		m_dWeightCohesion;
-	double		m_dWeightAlignment;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
+	double		  m_dWeightCohesion;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
+	double		  m_dWeightAlignment;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightFollow;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightWander;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightWallAvoidance;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightSeek;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringWight")
 	double        m_dWeightArrive;
 
 
@@ -164,9 +177,9 @@ private :
 	//walls it may encounter
 	//FVector WallAvoidance(const std::vector<Wall2D*> &walls);
 
-	FVector Cohesion(const std::list<AActor*> &agents);
-	FVector Separation(const std::list<AActor*> &agents);
-	FVector Alignment(const std::list<AActor*> &agents);
+	FVector Cohesion(const TArray<AActor*>&agents);
+	FVector Separation(const TArray<AActor*>&agents);
+	FVector Alignment(const TArray<AActor*>&agents);
 	FVector Follow(AActor* agents);
 
 
