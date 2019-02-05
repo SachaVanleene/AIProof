@@ -7,9 +7,9 @@
 USteeringComponent::USteeringComponent(AActor* agent) :
 m_owner(agent),
 m_iFlags(0),
-m_dWeightSeparation(10.0),
-m_dWeightAlignment(0.7), //codé en dur, peu mieux faire
-m_dWeightCohesion(0.7),
+m_dWeightSeparation(0.3),
+m_dWeightAlignment(0.3),
+m_dWeightCohesion(0.3),
 m_dWeightFollow(0.2),
 m_dWeightWander(1.0),
 m_dWeightWallAvoidance(10.0),
@@ -93,12 +93,16 @@ void USteeringComponent::BeginPlay()
 
 		if (m_TeamActor)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamOK");
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamOK");
 			m_Team = m_TeamActor->FindComponentByClass<UTestTeamComponent>();
 			if (m_Team)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamSetUp");
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TeamSetUp");
 			}
+		}
+		if (m_leader)
+		{
+			m_offesetLeader = m_owner->GetActorLocation() - m_leader->GetActorLocation();
 		}
 	}
 	m_currentTarget = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -255,6 +259,13 @@ FVector USteeringComponent::CalculatePrioritized()
 	if (FollowLeaderIsOn())
 	{
 		force = Follow(m_currentTarget) * m_dWeightFollow;
+
+		if (!AccumulateForce(m_vSteeringForce, force)) return m_vSteeringForce;
+	}
+
+	if (FollowLeaderOffsetIsOn())
+	{
+		force = FollowOffeset(m_leader, m_offesetLeader) * m_dWeightFollow;
 
 		if (!AccumulateForce(m_vSteeringForce, force)) return m_vSteeringForce;
 	}
@@ -580,5 +591,17 @@ FVector USteeringComponent::Follow(AActor* leader)
 
 	//now seek to the predicted future position of the evader
 	return Seek((leader-> GetActorLocation() + leader->GetVelocity()) * LookAheadTime);
+}
+
+FVector USteeringComponent::FollowOffeset(AActor* leader, const FVector & offeset)
+{
+	FVector offsetPos = leader->GetActorLocation() + offeset;
+
+	FVector toOffeset = offsetPos - m_owner->GetActorLocation();
+
+	double LookAheadTime = toOffeset.Size() /
+		(m_movComponent->GetMaxSpeed() + leader->GetVelocity().Size());
+
+	return Arrive(offsetPos + leader->GetVelocity() * LookAheadTime, m_Deceleration);
 }
 

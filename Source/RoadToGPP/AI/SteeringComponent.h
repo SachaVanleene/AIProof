@@ -67,6 +67,9 @@ private :
 	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
 		bool wall_avoidance_activated;
 
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringToActivate")
+		bool follow_offset_activated;
+
 	//a pointer to the owner of this instance
 	AActor*     m_owner;
 
@@ -78,7 +81,9 @@ private :
 	AActor * m_currentTarget;
 
 	//Leader to follow
-	AActor*  leader;
+	UPROPERTY(EditAnywhere, Category = "Steering|SteeringLeader")
+	AActor*  m_leader;
+	FVector m_offesetLeader;
 
 	//Movement Component
 	UCharacterMovementComponent * m_movComponent;
@@ -180,7 +185,10 @@ private :
 	FVector Cohesion(const TArray<AActor*>&agents);
 	FVector Separation(const TArray<AActor*>&agents);
 	FVector Alignment(const TArray<AActor*>&agents);
+
+
 	FVector Follow(AActor* agents);
+	FVector FollowOffeset(AActor* leader, const FVector & offeset);
 
 
 	/* .......................................................
@@ -226,7 +234,8 @@ public:
 	void WanderOn() { wander_activated = true; }
 	void SeparationOn() { separation_activated = true; }
 	void CohesionOn() { cohesion_activated = true; }
-	void FollowLeaderOn(AActor* l) { follow_activated = true; leader = l; }
+	void FollowLeaderOn(AActor* l) { follow_activated = true; m_leader = l; }
+	void FollowLeaderOffsetOn(AActor* l) { follow_offset_activated = true; m_leader = l; }
 	void AlignmentOn() { alignment_activated = true; }
 	void WallAvoidanceOn() { wall_avoidance_activated = true; }
 
@@ -235,7 +244,8 @@ public:
 	void WanderOff() { if (wander_activated) wander_activated = false; }
 	void SeparationOff() { if (separation_activated) separation_activated = false; }
 	void CohesionOff() { if (cohesion_activated) cohesion_activated = false; }
-	void FollowLeaderOff() { if (follow_activated) follow_activated = true; }
+	void FollowLeaderOff() { if (follow_activated) follow_activated = false; }
+	void FollowLeaderOffsetOff(){ if (follow_offset_activated) follow_offset_activated = false; }
 	void AlignmentOff() { if (alignment_activated) alignment_activated = false; }
 	void WallAvoidanceOff() { if (wall_avoidance_activated) wall_avoidance_activated = false; }
 
@@ -245,6 +255,7 @@ public:
 	bool SeparationIsOn() { return separation_activated; }
 	bool CohesionIsOn() { return cohesion_activated; }
 	bool FollowLeaderIsOn() { return follow_activated; }
+	bool FollowLeaderOffsetIsOn() { return follow_offset_activated; };
 	bool AlignmentIsOn() { return alignment_activated; }
 	bool WallAvoidanceIsOn() { return wall_avoidance_activated; }
 
