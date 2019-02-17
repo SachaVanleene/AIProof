@@ -7,6 +7,13 @@ In progress :
   - Engine FLow
   - Physique Engine
   - Anim Engine
+- GOAP : 
+  - Design Tech (Goap Action, GoapCondition, GoapEffet, Goap Goal)
+  - Goal need a list of condition to be active and list of action to be fulfiil
+  - Planner (Backward, A* heuristic)
+  - Watch out goal path should be 2 - 3 long - not to much logic in
+  - (If needed rewatch the video : https://www.youtube.com/watch?v=gm7K68663rA)
+
 - Steering : 
   - Fonctionnel, mais choix de savoir si fonctionne avec UcharacterMovementCOmponent ou pas (Car chose a revoir + Friction issue)
   - Ajout steering avec offset
