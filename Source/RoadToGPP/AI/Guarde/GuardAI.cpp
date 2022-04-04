@@ -14,9 +14,9 @@ AGuardAI::AGuardAI() :
 	m_BehaviorComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("m_BehaviorComponent"));
 }
 
-void AGuardAI::Possess(APawn* InPawn)
+void AGuardAI::SetPawn(APawn* InPawn)
 {
-	Super::Possess(InPawn);
+	Super::SetPawn(InPawn);
 	m_Pawn = InPawn;
 
 	AGuardeCharacterFix * gCHar = Cast<AGuardeCharacterFix>(InPawn);

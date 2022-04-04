@@ -28,7 +28,7 @@ public :
 
 	AGuardAI();
 
-	virtual void Possess(APawn* InPawn) override;
+	virtual void SetPawn(APawn* InPawn) override;
 
 	inline uint8 GetEnnemeyKeyID() { return m_EnnemyKeyID; };
 	inline APawn * GetAssociatedPawn() { return m_Pawn; };
